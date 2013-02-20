@@ -1,0 +1,67 @@
+<!DOCTYPE html> 
+<html>
+<head> 
+<meta charset="UTF-8" />
+<title></title>
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<style type="text/css">
+* {
+	margin:0;
+	padding:0;
+}
+body {
+	background:#000;
+	font:12px sans-serif;
+	color:#0F0;
+	padding:2em;
+}
+p {
+	margin:10px;
+}
+</style>
+</head>
+<body>
+
+<p><input type="file" id="files" /></p>
+<p><input type="button" id="submit" value="Read" /></p>
+
+<!-- [ SCRIPTS ] -->
+<script src="zepto.min.js" type="text/javascript"></script>
+<script src="ExcelParser.js" type="text/javascript"></script>
+<script type="text/javascript" language="javascript">
+;(function(window, document, $){
+	function onClickSubmit(){
+		var parse = new onepac.ExcelParser();
+		parse.onParseStart = parse.onParseComplete = function() {
+			console.log(arguments);
+		};
+		parse.onReadByRecord = function(colums, source) {
+			console.log(arguments);
+		};
+		var loader = new onepac.FileLoader($("#files").get(0));
+		loader.onLoaded = function() {
+			console.log(arguments);
+		};
+		loader.onLoadComplete = function(results, files) {
+			console.log(arguments);
+			
+			var first = results[0];
+			
+			parse.parse(first);
+		};
+		loader.start();
+	}
+	$("#submit").on("click", onClickSubmit);
+	
+})(window,document,Zepto);
+</script>
+<noscript><p id="msgNoscript">当サイトは、ブラウザのJavaScript設定を有効にしてご覧ください。</p></noscript>
+<!-- / [ SCRIPTS ] -->
+
+<!-- [ ANALYSIS ] -->
+<!-- / [ ANALYSIS ] -->
+
+</body>
+</html>
