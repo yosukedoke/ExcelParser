@@ -20,6 +20,15 @@ body {
 p {
 	margin:10px;
 }
+#dump table {
+	border:3px solid #0F0;
+	border-collapse:collapse;
+}
+#dump table tr,
+#dump table td{
+	border:1px solid #0F0;
+	padding:0.2em;
+}
 </style>
 </head>
 <body>
@@ -27,15 +36,36 @@ p {
 <p><input type="file" id="files" /></p>
 <p><input type="button" id="submit" value="Read" /></p>
 
+<div id="dump"></div>
 <!-- [ SCRIPTS ] -->
 <script src="zepto.min.js" type="text/javascript"></script>
 <script src="ExcelParser.js" type="text/javascript"></script>
 <script type="text/javascript" language="javascript">
 ;(function(window, document, $){
+	function dump(table) {
+		$("#dump").empty();
+		var str = "<table>",
+			i, l, j, k;
+		for(i=0, l = table.length; i<l; ++i){
+			var record = table[i];
+			str += "<tr>";
+			for(j = 0, k = record.length; j<k; ++j){
+				var colum = record[j];
+				str += "<td>" + colum + "</td>";
+			}
+			str += "</tr>";
+		}
+		str += "</table>";
+		$("#dump").append(str);
+	}
 	function onClickSubmit(){
 		var parse = new onepac.ExcelParser();
-		parse.onParseStart = parse.onParseComplete = function() {
+		parse.onParseStart = function() {
 			console.log(arguments);
+		};
+		parse.onParseComplete = function(table) {
+			console.log(arguments);
+			dump(table);
 		};
 		parse.onReadByRecord = function(colums, source) {
 			console.log(arguments);
